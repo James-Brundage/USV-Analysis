@@ -8,11 +8,13 @@ import os, sys
 # Stitches the separate excel files together, creates columns for which file they came from, creates and adjusted time column
 # returns a dataframe of the whole experiment.
 def USV_stitch(folder_path):
+
+    print(folder_path)
     # Creates lists of path names, df from each one
     paths_lst = os.listdir(folder_path)
     dfs_lst = []
     for name in paths_lst[:]:
-        df = pd.read_excel(folder_path + '\\' + name)
+        df = pd.read_excel(os.path.join(folder_path, name))
         dfs_lst.append(df)
     # Creates dictionary from df and filename
     dictt = dict(zip(paths_lst, dfs_lst))
@@ -37,11 +39,11 @@ def USV_stitch(folder_path):
             df = dictt[k]
             listc = []
             for i in range(0, len(df['ID'])):
-                listc.append('art 3')
+                listc.append('Part 3')
             df['Parts'] = listc
     for k in dictt:
         df = dictt[k]
-        lista
+        lista =[]
         if df['Parts'][0] == 'art 1':
             df['Adjusted Time'] = df['Begin Time (s)']
 
@@ -50,7 +52,10 @@ def USV_stitch(folder_path):
 
         else:
             df['Adjusted Time'] = df['Begin Time (s)'] + (60 * 45) + (60 * 60)
-    dict_output = [dictt[paths_lst[0]], dictt[paths_lst[1]], dictt[paths_lst[2]]]
+
+    dict_output = []
+    for k, v in dictt.items():
+        dict_output.append(v)
 
     # Concatenates to single df
     dff = pd.concat(dict_output)
@@ -123,13 +128,20 @@ def Binner(df):
     BinnedDF['Total Calls'] = BinnedDF['Rewarding Calls'] + BinnedDF['Aversive Calls']
     BinnedDF['Average Principal Frequency'] = Binned_Principal_Freq
 
-
     return [df,BinnedDF]
 
-def Categorical_Adder(df_lst):
-    Rat_Number = input('What is the Rat Number? ')
-    Technician = input('Who was the technician for this experiment? ')
-    Vib_Freq = input('What was the vibration frequency? ')
+def Categorical_Adder(df_lst, inpt=True, rn=None, tc=None, f=None):
+
+    if inpt == False:
+        Rat_Number = rn
+        Technician = tc
+        Vib_Freq = f
+
+    elif inpt == True:
+        Rat_Number = input('What is the Rat Number? ')
+        Technician = input('Who was the technician for this experiment? ')
+        Vib_Freq = input('What was the vibration frequency? ')
+
     ret_df_lst = []
     for df in df_lst:
         df['Rat Number'] = [Rat_Number] * len(df)
@@ -155,12 +167,15 @@ def Categorical_Adder(df_lst):
     return ret_df_lst
 
 
-    
-    
-    
 
-
-path = r"R:\SteffensenLab\FREELY-MOVING ANIMAL STUDIES--DO NOT DELETE\MStim\MStim + USVs Nov 2019\MStim + USVs Exported Excel Files\45Hz\Cage 1\Stripe 1"
+#
+# path = r"/Users/jamesbrundage/Box/USV MStim/MStim + USVs Exported Excel Files/45Hz/Cage 1/Stripe 1"
+#
+# df = USV_stitch(path)
+# dfs = Binner(df)
+# dfs = Categorical_Adder(dfs)
+#
+# pd.DataFrame.to_clipboard(dfs[1])
 
 
 
