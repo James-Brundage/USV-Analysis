@@ -15,8 +15,6 @@ rng = [1.5, 2]
 # Filters the between 1.5 hours and 2 hours
 df = df[(df['Hour'] >= 1.5) & (df['Hour'] <= 2)]
 
-# Finds average of different inputs per animal
-
 
 
 
